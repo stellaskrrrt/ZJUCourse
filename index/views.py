@@ -92,16 +92,14 @@ def chPassword(request):
 
 def checkPassword(request):
     if request.COOKIES['is_login']:
-        rep = redirect("../class/23505/home")
         if request.method == 'GET':
             return render(request, 'index/checkPassword.html')
         if request.method == 'POST':
             name = request.POST.get('name')
             prepasswd = request.POST.get('prepasswd')
-            newpasswd = request.POST.get('newpasswd')
             qurey = "select * from User where Name= %s and Password = %s"
             res = sql.select(qurey, name, prepasswd)
             if len(res) != 1:
                 return HttpResponse('no')
             else:
-                return rep
+                return render(request, 'index/chPassword.html')
