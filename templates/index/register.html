@@ -94,11 +94,12 @@
                 'email': email
             },
             success: function (result) {
-                if (result.toString() == 'no') {
+                if (result.toString() === 'no') {
+                    document.getElementById('hint').innerText = 'fail';
                     alert("用户已存在");
                     return;
                 } else {
-                    window.location.replace('/class/23505/home');
+                    window.location.replace('/class/23505/home/');
                 }
             },
             error: function (result) {
