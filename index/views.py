@@ -1,8 +1,32 @@
 from django.shortcuts import render, redirect
 from django.shortcuts import HttpResponse
 import sqlframe
+import random
+import hashlib
 
 sql = sqlframe.SqlHandler('conf.txt', 'ZJUCourse')
+
+
+def md5(str):
+    m = hashlib.md5()
+    m.update(str.encode("utf8"))
+    return m.hexdigest()
+
+
+def gencode2md5(str):
+    code = md5(str)
+    return code
+
+
+def gencode(code_len=4):
+    """生成指定长度的验证码
+    : param code_len :验证码的长度（默认4个字符)
+    : return :由大小写字母和数字构成的随机验证码
+    """
+    all_chars = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'
+    code = random.sample(all_chars, code_len)
+    code = ''.join(code)
+    return code
 
 
 # Create your views here.
@@ -32,6 +56,7 @@ def login(request):
             rep.set_cookie(key='is_login', value=True)
             rep.set_cookie(key='user_id', value=str(id))
             rep.set_cookie(key='user_type', value=str(result[0][6]))
+
             return rep
 
 
@@ -51,15 +76,17 @@ def register(request):
             return HttpResponse('no')
         else:
             sql.execute("insert into User values(%s, %s, %s, %s, %s, %s, %s)", username,
-                        password, username,'', email, phone, 0)
+                        password, username, '', email, phone, 0)
             return HttpResponse('yes')
 
 
-def fgPassword(request):
+def findPassword(request):
     if request.COOKIES['is_login']:
         rep = redirect("../class/23505/home/")
+        code = gencode()
+        rep.set_cookie(key='code', value=code)
         if request.method == 'GET':
-            return render(request, 'index/fgPassword.html')
+            return render(request, 'index/findPassword.html')
         if request.method == 'POST':
             email = request.POST.get('email')
             captcha = request.POST.get('captcha')
