@@ -6,4 +6,5 @@ urlpatterns = [
     path('help/', views.assistant),
     path('login/', views.login),
     path('register/', views.register),
+    path('fgPassword/', views.fgPassword)
 ]
