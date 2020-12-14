@@ -1,8 +1,11 @@
 from django.shortcuts import render, redirect
 from django.shortcuts import HttpResponse
+from django.core.mail import send_mail
 import sqlframe
 import random
 import hashlib
+
+from ZJUCourse.settings import EMAIL_HOST_USER
 
 sql = sqlframe.SqlHandler('conf.txt', 'ZJUCourse')
 
@@ -82,35 +85,33 @@ def register(request):
 
 def findPassword(request):
     if request.COOKIES['is_login']:
-        rep = redirect("../class/23505/home/")
-        code = gencode()
-        rep.set_cookie(key='code', value=code)
         if request.method == 'GET':
             return render(request, 'index/findPassword.html')
         if request.method == 'POST':
             email = request.POST.get('email')
-            captcha = request.POST.get('captcha')
-            if email and captcha:
-                query = "select * from User where Email = %s"
-                result = sql.select(query, email)
+            username = request.POST.get('username')
+            if email and username:
+                query = "select * from User where Email = %s and User_ID = %s"
+                result = sql.select(query, email, username)
                 print(result)
-                if len(result) != 1:
-                    return HttpResponse('no')
+                if len(result) == 1:
+                    url = 'http://127.0.0.1:8000/chPassword/'
+                    send_mail('find password', url, EMAIL_HOST_USER, [result[0][4], ], fail_silently=False)
+                    return HttpResponse("yes")
                 else:
-                    return rep
+                    return HttpResponse("no")
 
 
-def chPassword(request):
+def chPassword(request, username):
     if request.COOKIES['is_login']:
         rep = redirect("../class/23505/home/")
         if request.method == 'GET':
             return render(request, 'index/chPassword.html')
         if request.method == 'POST':
-            userid = request.COOKIES['user_id']
             prepasswd = request.POST.get('prepasswd')
             newpasswd = request.POST.get('newpasswd')
             qurey = "update User set Password = %s where User_ID = %s"
-            sql.execute(qurey, newpasswd, userid)
+            sql.execute(qurey, newpasswd, username)
             return rep
 
 
