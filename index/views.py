@@ -53,3 +53,55 @@ def register(request):
             sql.execute("insert into User values(%s, %s, %s, %s, %s, %s, %s)", username,
                         password, username,'', email, phone, 0)
             return HttpResponse('yes')
+
+
+def fgPassword(request):
+    if request.COOKIES['is_login']:
+        rep = redirect("../class/23505/home")
+        if request.method == 'GET':
+            return render(request, 'index/fgPassword.html')
+        if request.method == 'POST':
+            email = request.POST.get('email')
+            captcha = request.POST.get('captcha')
+            if email and captcha:
+                query = "select * from User where Email = %s"
+                result = sql.select(query, email)
+                print(result)
+                if len(result) != 1:
+                    return HttpResponse('no')
+                else:
+                    return rep
+
+
+def chPassword(request):
+    if request.COOKIES['is_login']:
+        rep = redirect("../class/23505/home")
+        if request.method == 'GET':
+            return render(request, 'index/chPassword.html')
+        if request.method == 'POST':
+            userid = request.COOKIES['user_id']
+            prepasswd = request.POST.get('prepasswd')
+            newpasswd = request.POST.get('newpasswd')
+            qurey = "update User  set Password = %s where User_ID = %s"
+            result = sql.execute(qurey, newpasswd, userid)
+            if len(result) != 1:
+                return HttpResponse('no')
+            else:
+                return rep
+
+
+def checkPassword(request):
+    if request.COOKIES['is_login']:
+        rep = redirect("../class/23505/home")
+        if request.method == 'GET':
+            return render(request, 'index/checkPassword.html')
+        if request.method == 'POST':
+            name = request.POST.get('name')
+            prepasswd = request.POST.get('prepasswd')
+            newpasswd = request.POST.get('newpasswd')
+            qurey = "select * from User where Name= %s and Password = %s"
+            res = sql.select(qurey, name, prepasswd)
+            if len(res) != 1:
+                return HttpResponse('no')
+            else:
+                return rep
