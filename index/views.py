@@ -22,7 +22,6 @@ def login(request):
         id = request.POST.get('id')
         pwd = request.POST.get('pass')
         query = "select * from User where User_ID = %s and Password = %s"
-
         result = sql.select(query, id, pwd)
         print(result)
         if len(result) != 1:
@@ -37,4 +36,20 @@ def login(request):
 
 
 def register(request):
-    return render(request, 'index/register.html')
+    if request.method == 'GET':
+        return render(request, 'index/register.html')
+    elif request.method == 'POST':
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+        phone = request.POST.get('password')
+        email = request.POST.get('email')
+
+        query = "select * from User where User_ID = %s"
+        result = sql.select(query, username)
+        print(result)
+        if len(result) == 1:
+            return HttpResponse('no')
+        else:
+            sql.execute("insert into Assignment values(%s, %s, %s, null, %s, %s, %s)", username,
+                        password, username, email, phone, 0)
+            return HttpResponse('yes')

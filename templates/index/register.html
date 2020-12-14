@@ -3,10 +3,110 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
-
     <link href="../../static/common/img/icon.jpg" rel="icon">
+    <link href="../../static/common/css/bootstrap.min.css" rel="stylesheet">
+
+    <script src="../../static/common/js/bootstrap.min.js"></script>
+    <script src="../../static/common/js/jquery.min.js"></script>
+    <script src="../../static/common/js/popper.min.js"></script>
 </head>
 <body>
-    <h1>注册</h1>
+<h1>注册</h1>
+
+<div class="container">
+    <div class="form-group">
+        <label for="user">用户名:</label>
+        <input type="text" class="form-control" id="user">
+    </div>
+    <div class="form-group">
+        <label for="email">邮箱:</label>
+        <input type="email" class="form-control" id="email">
+    </div>
+
+    <div class="form-group">
+        <label for="phone">电话:</label>
+        <input type="number" class="form-control" id="phone">
+    </div>
+    <div class="form-group">
+        <label for="password">密码:</label>
+        <input type="password" class="form-control" id="password">
+    </div>
+    <div class="form-group">
+        <label for="repassword">确认密码:</label>
+        <input type="password" class="form-control" id="repassword">
+    </div>
+    <input type="button" class="btn btn-primary" id="login" value="登录">
+    <h2 id="hint"></h2>
+</div>
+
+<script>
+    $('#login').click(function () {
+
+        var username = $('#user').val();
+        var email = $('#email').val();
+        var all_number = new RegExp("^[0-9]*$").test(username);
+        var password1 = $('#password').val()
+        var password2 = $('#repassword').val()
+        var phone = $('#phone').val()
+        var all_number2 = new RegExp("^[0-9]*$").test(password1);
+
+        if (username.length <= 3) {
+            alert("用户名长度需大于3个字符");
+            return;
+        }
+        if (all_number) {
+            alert("用户名不能纯数字");
+            return;
+        }
+
+        if (password1.length <= 3) {
+            alert("密码长度需大于3个字符");
+            return;
+        }
+
+        if (all_number2) {
+            alert("密码不能纯数字");
+            return;
+        }
+        var is_email = new RegExp("^([a-zA-Z0-9]+[_|\_|\.]?)*[a-zA-Z0-9]+@([a-zA-Z0-9]+[_|\_|\.]?)*[a-zA-Z0-9]+\.[a-zA-Z]{2,3}$").test(email);
+        if (!is_email) {
+            alert("邮箱格式错误");
+            return;
+        }
+        var is_phone = new RegExp("^[1][3,4,5,7,8][0-9]{9}$").test(phone);
+        if (!is_phone) {
+            alert("联系方式格式错误");
+            return;
+        }
+
+        if (password1 !== password2) {
+            alert("两次密码不匹配");
+            return;
+        }
+        $.ajax({
+            type: 'POST',
+            url: '',
+            data: {
+                csrfmiddlewaretoken: '{{ csrf_token }}',
+                'username': username,
+                'password': password1,
+                'phone': phone,
+                'email': email
+            },
+            success: function (result) {
+                if (result.toString() == 'no') {
+                    alert("用户已存在");
+                    return;
+                } else {
+                    window.location.replace('/class/23505/home');
+                }
+            },
+            error: function (result) {
+                alert("错误");
+                return;
+            }
+        });
+    })
+</script>
 </body>
 </html>
