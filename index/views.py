@@ -84,27 +84,25 @@ def register(request):
 
 
 def findPassword(request):
-    if request.COOKIES['is_login']:
-        if request.method == 'GET':
-            return render(request, 'index/findPassword.html')
-        if request.method == 'POST':
-            email = request.POST.get('email')
-            username = request.POST.get('username')
-            if email and username:
-                query = "select * from User where Email = %s and User_ID = %s"
-                result = sql.select(query, email, username)
-                print(result)
-                if len(result) == 1:
-                    url = 'http://127.0.0.1:8000/chPassword/'
-                    send_mail('find password', url, EMAIL_HOST_USER, [result[0][4], ], fail_silently=False)
-                    return HttpResponse("yes")
-                else:
-                    return HttpResponse("no")
+    if request.method == 'GET':
+        return render(request, 'index/findPassword.html')
+    if request.method == 'POST':
+        email = request.POST.get('email')
+        username = request.POST.get('username')
+        if email and username:
+            query = "select * from User where Email = %s and User_ID = %s"
+            result = sql.select(query, email, username)
+            print(result)
+            if len(result) == 1:
+                url = 'http://127.0.0.1:8000/chPassword/' + username + '/'
+                send_mail('find password', url, EMAIL_HOST_USER, [result[0][4], ], fail_silently=False)
+                return HttpResponse("yes")
+            else:
+                return HttpResponse("no")
 
 
 def chPassword(request, username):
     if request.COOKIES['is_login']:
-        rep = redirect("../class/23505/home/")
         if request.method == 'GET':
             return render(request, 'index/chPassword.html')
         if request.method == 'POST':
@@ -112,7 +110,7 @@ def chPassword(request, username):
             newpasswd = request.POST.get('newpasswd')
             qurey = "update User set Password = %s where User_ID = %s"
             sql.execute(qurey, newpasswd, username)
-            return rep
+            return HttpResponse("Yes")
 
 
 def checkPassword(request):
@@ -129,6 +127,7 @@ def checkPassword(request):
                 return HttpResponse('no')
             else:
                 return render(request, 'index/chPassword.html')
+
 
 def logout(request):
     request.COOKIES.clear()
