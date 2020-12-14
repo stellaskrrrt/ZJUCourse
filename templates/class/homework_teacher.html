@@ -1,0 +1,584 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>高校教学平台</title>
+    <style>
+        .demoDiv {
+            display: inline-block;
+            text-align: center;
+            vertical-align: center;
+            margin-top: 2px;
+        }
+    </style>
+    <link href="/static/common/img/icon.jpg" rel="icon">
+    <link href="/static/common/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/static/common/css/icons.css" rel="stylesheet">
+    <link href="/static/common/css/all.min.css" rel="stylesheet">
+    <link href="/static/common/editor/css/editormd.css" rel="stylesheet">
+    <link href="/static/common/editor/css/editormd.min.css" rel="stylesheet">
+    <link href="/static/common/editor/css/editormd.preview.css" rel="stylesheet">
+
+    <script src="/static/common/js/bootstrap.min.js"></script>
+    <script src="/static/common/js/jquery.min.js"></script>
+    <script src="/static/common/js/popper.min.js"></script>
+    <script src="/static/common/js/shieldui-all.min.js"></script>
+    <script src="/static/common/editor/editormd.js"></script>
+    <script src="https://cdn.staticfile.org/twitter-bootstrap/4.3.1/js/bootstrap.min.js"></script>
+</head>
+<body id="body">
+    <nav class="navbar navbar-expand-lg bg-dark navbar-dark fixed-top shadow">
+        <a class="navbar-brand" href="../../../">
+            <img src="/static/common/img/logo.png" alt="logo">
+        </a>
+        <button class="navbar-toggler" type="button" id="toggle-button">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="collapsibleNavbar">
+            <ul class="navbar-nav col-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="../../../course/index/">课程列表</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="../../../user/myResource/">我的资源</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="../../../help/">使用帮助</a>
+                </li>
+            </ul>
+            <div class="col-2"></div>
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <input type="text" class="form-control" placeholder="请输入您想查找的课程">
+                </li>
+            </ul>
+            <div class="col-2"></div>
+            <ul class="navbar-nav col-auto">
+                <li class="nav-item dropdown" id="notification">
+                    <a class="nav-link" href="../../../user/myNotification/"><span
+                            class="icon-bar-notification">通知<span
+                            class="bdge badge-primary"
+                            style="margin-left: 2px;">{{ notification_number }}</span></span></a>
+
+                    <div class="dropdown-menu" id="notification-menu">
+                        <a class="dropdown-item" href="#">通知 1</a>
+                        <a class="dropdown-item" href="#">通知 2</a>
+                        <a class="dropdown-item" href="#">通知 3</a>
+                    </div>
+                </li>
+                <li class="nav-item dropdown" id="profile" style="cursor: pointer; margin-left: 10px;">
+                    <img src="/static/common/img/default-profile.jpg" alt="logo" style="border-radius: 100%;"
+                         width="50" height="50">
+                    <div class="dropdown-menu" id="profile-menu">
+                        <a class="dropdown-item" href="/user/myCourse">
+                            <span class="icon-bar-course">我的课程</span>
+                        </a>
+                        <a class="dropdown-item" href="/user/myResource">
+                            <span class="icon-bar-resource">我的资源</span>
+                        </a>
+                        <a class="dropdown-item" href="/user/myForum">
+                            <span class="icon-bar-forum">我的论坛</span>
+                        </a>
+                        <a class="dropdown-item" href="/user/setting">
+                            <span class="icon-bar-setting">个人设置</span>
+                        </a>
+                    </div>
+                </li>
+                <span class="navbar-text" style="margin-left: 10px;">欢迎您！{{ name }}</span>
+            </ul>
+
+        </div>
+
+    </nav>
+    <script>
+        let state = false;
+        $('#toggle-button').click(function () {
+            if (state) {
+                $('#collapsibleNavbar').slideUp();
+                state = false;
+            } else {
+                $('#collapsibleNavbar').slideDown();
+                state = true;
+            }
+        })
+
+        document.getElementById('notification').onmouseenter = function () {
+            $('#notification-menu').slideDown();
+        }
+
+        document.getElementById('notification').onmouseleave = function () {
+            $('#notification-menu').slideUp();
+        }
+
+        document.getElementById('profile').onmouseenter = function () {
+            $('#profile-menu').slideDown();
+        }
+
+        document.getElementById('profile').onmouseleave = function () {
+            $('#profile-menu').slideUp();
+        }
+    </script>
+    <div class="container-fluid shadow bg-light border" style="margin-top: 100px;">
+        <div class="container" style="padding: 20px 20px;">
+            <h3><a href="../home">{{ course_name }}</a></h3>
+            <div class="row">
+                <p>{{ year }}&nbsp;&nbsp;</p>
+                <p>{{ semester }}&nbsp;&nbsp;</p>
+                <p>{{ department }}&nbsp;&nbsp;</p>
+                <p>{{ building }}&nbsp;&nbsp;</p>
+                <p>{{ room }}&nbsp;&nbsp;</p>
+            </div>
+            <div class="row">
+                <p>授课教师：</p>
+                {% for teacher in teacher_group %}
+                    <p><a href="#">{{ teacher.name }}</a>&nbsp;&nbsp;{{ teacher.email }}&nbsp;&nbsp;&nbsp;</p>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    <div class="container shadow">
+        <ul class="nav nav-tabs" style="margin-top: 20px;">
+            <li class="nav-item">
+                <a class="nav-link" data-toggle="tab" href="../home/">章节</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" data-toggle="tab" href="../notification/">通知</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" data-toggle="tab" href="../material/">资料</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link active" data-toggle="tab" href="#homework">作业</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" data-toggle="tab" href="../exam/">测试</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" data-toggle="tab" href="../experiment/">实验</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" data-toggle="tab" href="../forum/">论坛</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" data-toggle="tab" href="../group/">分组</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" data-toggle="tab" href="../viewScore/">成绩</a>
+            </li>
+        </ul>
+
+        <div class="tab-content">
+            <div class="tab-pane fade show active" id="homework" style="padding: 10px 10px; margin-bottom: 80px;">
+                <div class="row" style="margin-bottom: 0.5rem;">
+                    <div class="col-2">
+                        <button type="button" class="btn btn-primary" onclick="$('#myModal').modal();">添加新作业</button>
+
+                        <!-- 模态框 -->
+                        <div class="modal fade" id="myModal">
+                            <div class="modal-dialog modal-xl" style="max-width: 1400px;">
+                                <div class="modal-content">
+
+                                    <!-- 模态框头部 -->
+                                    <div class="modal-header">
+                                        <h4 class="modal-title">添加新作业</h4>
+                                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                    </div>
+
+                                    <!-- 模态框主体 -->
+                                    <div class="modal-body" id="modal_body">
+                                        <div class="input-group mb-3" id="test">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text">作业名称：</span>
+                                            </div>
+                                            <input type="text" class="form-control" id="assignment_name">
+                                        </div>
+                                        <div id="test-editor">
+                                            <textarea style="display: none;"></textarea>
+                                        </div>
+
+                                        <div class="row">
+                                            <div class="col-3">
+                                                <div class="input-group mb-3" id="test">
+                                                    <div class="input-group-prepend">
+                                                        <span class="input-group-text">作业占比：</span>
+                                                    </div>
+                                                    <input type="text" class="form-control" id="assignment_percentage"
+                                                           placeholder="请输入0-100的整数">
+                                                    <div class="input-group-append">
+                                                        <span class="input-group-text">%</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-1"></div>
+                                            <div class="col-3">
+                                                <div class="input-group mb-3" id="test">
+                                                    <div class="input-group-prepend">
+                                                        <span class="input-group-text">作业形式：</span>
+                                                    </div>
+                                                    <select class="form-control" id="assignment_type">
+                                                        <option>个人作业</option>
+                                                        <option>小组作业</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="col-1"></div>
+                                            <div class="col-3">
+                                                <div class="input-group mb-3" id="test">
+                                                    <div class="input-group-prepend">
+                                                        <span class="input-group-text">隶属章节：</span>
+                                                    </div>
+                                                    <select class="form-control" id="assignment_chapter">
+                                                        {% for chapter in chapter_group %}
+                                                            <option>{{ chapter.number }}&nbsp;&nbsp;{{ chapter.name }}</option>
+                                                        {% endfor %}
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-5">
+                                                <div class="input-group mb-3 input-group-sm" id="test">
+                                                    <div class="input-group-prepend">
+                                                        <span class="input-group-text">开始时间：</span>
+                                                    </div>
+                                                    <div class="demoDiv">
+                                                        <input type="text" id="picker_start">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-2"></div>
+                                            <div class="col-5">
+                                                <div class="input-group mb-3 input-group-sm" id="test">
+                                                    <div class="input-group-prepend">
+                                                        <span class="input-group-text">截止时间：</span>
+                                                    </div>
+                                                    <div class="demoDiv">
+                                                        <input type="text" id="picker_end">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!-- 以下代码从Bootstrap官网上copy，仅为input添加了onchange，以及添加了label的id -->
+                                        <div class="input-group">
+                                            <label class="input-group-prepend">
+                                                <span class="input-group-text">附件:</span>
+                                            </label>
+                                            <div class="col-5">
+                                                <input id="myfile" type="file" style="display: none" multiple>
+                                                <!--显示上传的文件名字-->
+                                                <input type="text" id="FileCover" class="form-control" readonly="true">
+                                            </div>
+                                            <div class="col-1">
+                                                <button class="btn btn-primary " type="button"
+                                                        onclick="$('#myfile').click();">
+                                                    <i class="fa fa-folder-open" id="browse">&nbsp;&nbsp;浏览</i>
+                                                </button>
+                                            </div>
+                                            <div class="col-1">
+                                                <button class="btn btn-primary " type="button"
+                                                        onclick="MyUpload('assignment')">
+                                                    <i class="fa fa-send" id="upload_status">&nbsp;&nbsp;上传</i>
+                                                </button>
+                                            </div>
+                                            <div class="col-2">
+                                                <p id="upload-hint" style="color: red;"></p>
+                                            </div>
+                                            <div class="col-2">
+                                                <p id="refresh" style="color: blue;"></p>
+                                            </div>
+                                        </div>
+                                        <div class="container" id="show_upload"></div>
+
+                                        <script>
+                                            $('#myfile').change(function () {
+                                                let myfiles = document.getElementById("myfile").files;
+                                                let file_len = myfiles.length;
+                                                let myfilename = "";
+                                                for (let i = 0; i < file_len; i++) {
+                                                    myfilename += myfiles[i].name + ";  ";
+                                                }
+                                                //console.log(myfiles);
+                                                //$('#FileCover').val($(this).val());
+                                                $('#FileCover').val(myfilename);
+                                                //拼接上传的文件名字并返回到FileCover
+                                            })
+
+                                            function MyUpload(belong) {
+                                                let myfiles = document.getElementById("myfile").files;//获取文件
+                                                let totalfile = myfiles.length;//上传的文件个数
+                                                let uploadedfile = 0;//已上传的文件个数
+                                                let data = new FormData();//构建FormData用于Ajax发送
+                                                let file_index = 0;
+                                                //每上传一个文件，添加一个进度条
+                                                let addhtml = "<div class=\"row\"> <div id=\"backname\" class=\"col-9\">文件1</div>\n" +
+                                                    "                                    <div id=\"backurl\" style=\"display: none\"></div>\n" +
+                                                    "                                    <div class=\"col-2\">上传进度:</div>\n" +
+                                                    "                                    <div id=\"percentage\" class=\"col-1\">100%</div></div>\n" +
+                                                    "                                    <div class=\"clearfix\"></div>\n" +
+                                                    "                                    <div class=\"progress progress-small\" >\n" +
+                                                    "                                        <div id=\"percentagebar\" style=\"width: 0%;\" class=\"progress-bar progress-bar-striped progress-bar-animated \"></div>\n" +
+                                                    "                                    </div> ";
+                                                $("#show_upload").empty();//每次点击上传按钮，把所有的进度条清空
+                                                while (file_index < myfiles.length) {
+                                                    data.append('file', myfiles[file_index]);// 获取1个文件放入FormData中
+                                                    data.append('csrfmiddlewaretoken', '{{ csrf_token }}');
+                                                    data.append('belong', belong.toString());
+                                                    data.append('chapter_number', $('#assignment_chapter').val().toString().split(' ')[0]);
+                                                    data.append('start', $('#picker_start').val().toString());
+                                                    data.append('end', $('#picker_end').val().toString());
+                                                    let percentage = 0;//上传进度
+                                                    $.ajax({
+                                                        type: "POST",
+                                                        url: "../FileUploads/",
+                                                        data: data,
+                                                        processData: false, // 告诉jQuery不要处理数据
+                                                        contentType: false, // 告诉jQuery不要设置类型
+                                                        xhr: function xhr() {
+                                                            let newbackname = "backname" + file_index;//文件名，本来想写后台返回的，懒
+                                                            let newbackurl = "backurl" + file_index;//每个文件上传后，返回的前台访问的url
+                                                            let newp = "percentage" + file_index;//每个文件的进度
+                                                            let newpbar = "percentagebar" + file_index;//每个进度条的名字
+                                                            let myfilename = myfiles[file_index].name;
+
+                                                            $("#show_upload").append(addhtml);
+                                                            $("#backname").attr('id', newbackname);
+                                                            $("#backurl").attr('id', newbackurl);
+                                                            $("#percentage").attr('id', newp);
+                                                            $("#percentagebar").attr('id', newpbar);
+
+                                                            let myxhr = $.ajaxSettings.xhr();
+                                                            if (myxhr.upload) {
+                                                                myxhr.upload.addEventListener('progress', function (e) {
+                                                                    if (e.lengthComputable) {
+                                                                        percentage = parseInt(e.loaded / e.total * 100);
+                                                                        let now_percentage = percentage + "%";
+                                                                        $("#" + newp).html(now_percentage);
+                                                                        $("#" + newpbar).css({"width": now_percentage});
+                                                                        $("#" + newpbar).html(now_percentage);
+                                                                        $("#" + newbackname).html(myfilename);
+                                                                    }
+                                                                }, false);
+                                                            }
+                                                            return myxhr;
+                                                        },
+                                                        success: function (result) {
+                                                            uploadedfile++;
+                                                            if (uploadedfile === totalfile) {
+                                                                document.getElementById('upload-hint').innerHTML = "<strong>上传成功！</strong>";
+                                                            }
+                                                        }
+                                                    });
+                                                    file_index = file_index + 1;
+                                                }
+                                            }
+
+                                        </script>
+
+
+                                        <script type="text/javascript">
+                                            $(function () {
+                                                $("#picker_start").shieldDateTimePicker({
+                                                    openOnFocus: false,
+                                                    showButton: true,
+                                                    editable: true,
+                                                    messages: {calendarIconTooltip: "open"},
+                                                    value: new Date(1900, 1, 1, 12, 0)
+                                                });
+                                                $("#picker_end").shieldDateTimePicker({
+                                                    openOnFocus: false,
+                                                    showButton: true,
+                                                    editable: true,
+                                                    messages: {calendarIconTooltip: "open"},
+                                                    value: new Date(1900, 1, 1, 12, 0)
+                                                });
+                                            });
+                                            let editor = editormd("test-editor", {
+                                                width: "1300",
+                                                height: "400",
+                                                path: "/static/common/editor/lib/",
+                                                codeBlock: true,
+                                                codeFold: true,
+                                                placeholder: '请输入作业具体内容',
+                                                saveHTMLToTextarea: true,
+                                                searchReplace: true,
+                                                htmlDecode: "style,script,iframe|on*",
+                                                emoji: true,
+                                                taskList: true,
+                                                tocm: true,                  // Using [TOCM]
+                                                tex: true,                   // 开启科学公式TeX语言支持，默认关闭
+                                                flowChart: true,             // 开启流程图支持，默认关闭
+                                                sequenceDiagram: true,       // 开启时序/序列图支持，默认关闭,
+                                                syncScrolling: true,
+                                                onload: function () {
+                                                    console.log('onload', this);
+                                                }
+                                            });
+                                        </script>
+                                    </div>
+                                    <!-- 模态框底部 -->
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-primary" id="new_homework">确认发布</button>
+                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">关闭</button>
+                                    </div>
+                                </div>
+
+                                <script>
+                                    document.getElementById('new_homework').onclick = function () {
+                                        let chapter_number = $('#assignment_chapter').val().toString();
+                                        let name = $('#assignment_name').val().toString();
+                                        let description = editor.getMarkdown();
+                                        let percentage = $('#assignment_percentage').val().toString();
+                                        let start_time = $('#picker_start').val().toString();
+                                        let expire_time = $('#picker_end').val().toString();
+                                        let type = $("#assignment_type").val().toString() === "个人作业" ? true : false;
+
+                                        $.ajax({
+                                            type: 'POST',
+                                            url: './new_homework/',
+                                            data: {
+                                                csrfmiddlewaretoken: '{{ csrf_token }}',
+                                                'new_homework': true,
+                                                'chapter_number': chapter_number,
+                                                'name': name,
+                                                'description': description,
+                                                'percentage': percentage,
+                                                'start_time': start_time,
+                                                'expire_time': expire_time,
+                                                'type': type,
+                                            },
+                                            success: function (result) {
+                                                if (result.toString() == 'ok') {
+                                                    document.getElementById('upload-hint').innerHTML = "<strong>作业布置成功！</strong>";
+                                                    document.getElementById('refresh').innerHTML = "5秒后自动刷新";
+                                                    let count = 4;
+                                                    let time = setInterval(function () {
+                                                        document.getElementById('refresh').innerHTML = count.toString() + "秒后自动刷新";
+                                                        count--;
+                                                    }, 1000);
+                                                    setTimeout(function () {
+                                                        clearInterval(time);
+                                                        location.reload();
+                                                    }, 5000);
+                                                } else {
+                                                    document.getElementById('upload-hint').innerHTML = "<strong>出错了！</strong>";
+                                                }
+                                            }
+                                        })
+                                    }
+                                </script>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-8"></div>
+                    <div class="col-2">
+                        <select class="form-control" id="sort">
+                            <option>排序方式</option>
+                            <option>创建时间</option>
+                            <option>开放时间</option>
+                            <option>截止时间</option>
+                        </select>
+                    </div>
+                    <script>
+                        document.getElementById('sort').onchange = function () {
+                            let choice = $('#sort').val().toString();
+                            $.ajax({
+                                type: 'GET',
+                                url: '',
+                                data: {
+                                    csrfmiddlewaretoken: '{{ csrf_token }}',
+                                    'type': (choice === '创建时间' ? '1' : (choice === '开放时间' ? '2' : '3')),
+                                },
+                                success: function (result) {
+                                    let len = result['assignment_group'].length;
+                                    let assignment_group = result['assignment_group'];
+                                    let output = "<li class=\"list-group-item list-group-item-info\">\n" +
+                                        "                        <div class=\"row\">\n" +
+                                        "                            <div class=\"col-3 text-center\">作业名称</div>\n" +
+                                        "                            <div class=\"col-4 text-center\">起止时间</div>\n" +
+                                        "                            <div class=\"col-2 text-center\">形式</div>\n" +
+                                        "                            <div class=\"col-2 text-center\">已交/总数</div>\n" +
+                                        "                        </div>\n" +
+                                        "                    </li>\n";
+
+                                    for (let i = 0; i < len; i++) {
+                                        let temp = "<li class=\"list-group-item\">\n" +
+                                            "                            <div class=\"row\">\n";
+                                        temp += "<div hidden>" + assignment_group[i]['id'].toString() + "</div>\n";
+                                        temp += "<div class=\"col-3 text-center\"><a href=\"" + assignment_group[i]['id'].toString() + "/detail\">" + assignment_group[i]['name'].toString() + "</a></div>\n";
+                                        temp += "<div class=\"col-4 text-center\">" + assignment_group[i]['start'].toString() + "&nbsp;-&nbsp;" + assignment_group[i]['end'].toString() + "</div>"
+                                        temp += "<div class=\"col-2 text-center\">" + assignment_group[i]['type'].toString() + "</div>\n";
+                                        temp += "<div class=\"col-2 text-center\">" + assignment_group[i]['submitted'].toString() + "/" + result['total_student'].toString() + "</div>\n";
+                                        temp += "<div class=\"col-1 text-center\"><a href=\"" + assignment_group[i]['id'].toString() + "/check\">批改</a></div>\n";
+                                        temp += "</div> </li>"
+
+                                        output += temp;
+                                    }
+
+                                    document.getElementById('homework_list').innerHTML = output;
+                                }
+                            })
+                        }
+                    </script>
+                </div>
+                <ul class="list-group" id="homework_list">
+                    <li class="list-group-item list-group-item-info">
+                        <div class="row">
+                            <div class="col-3 text-center">作业名称</div>
+                            <div class="col-4 text-center">起止时间</div>
+                            <div class="col-2 text-center">形式</div>
+                            <div class="col-2 text-center">已交/总数</div>
+                            <!--div class="col-1 text-center"><a href="#">批改</a></div-->
+                        </div>
+                    </li>
+                    {% for assignment in assignment_group %}
+                        <li class="list-group-item">
+                            <div class="row">
+                                <div hidden>{{ assignment.id }}</div>
+                                <div class="col-3 text-center"><a
+                                        href="{{ assignment.id }}/detail/">{{ assignment.name }}</a></div>
+                                <div class="col-4 text-center">{{ assignment.start }}&nbsp;-&nbsp;{{ assignment.end }}</div>
+                                <div class="col-2 text-center">{{ assignment.type }}</div>
+                                <div class="col-2 text-center">{{ assignment.submitted }}/{{ total_student }}</div>
+                                <div class="col-1 text-center"><a href="{{ assignment.id }}/check/">批改</a></div>
+                            </div>
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <nav class="navbar navbar-expand-sm bg-dark navbar-dark shadow fixed-bottom" style="height: 50px;">
+        <div class="container">
+            <div class="custom-control-inline" style="margin: 0 auto;">
+                <div class="navbar-text">
+                    <div class="nav-link">Copyright &copy; 2020.Zhejiang University All rights reserved.&nbsp;&nbsp;&nbsp;
+                        <a target="_blank" href="http://www.zju.edu.cn">浙江大学官网</a>
+                    </div>
+                </div>
+                <div style="width:250px; margin:0 auto; padding:20px 0;">
+                    <a target="_blank"
+                       href="http://beian.miit.gov.cn/"
+                       style="display:inline-block; text-decoration:none; height:20px; line-height:20px;">
+                        <p style="float:left; height:20px; line-height:20px; margin: 0px 0px 0px 5px; color:white;">
+                            浙ICP备2020034971号
+                        </p>
+                    </a>
+                </div>
+                <div style="width:250px; margin:0 auto; padding:20px 0;">
+                    <a target="_blank"
+                       href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=33010602011276"
+                       style="display:inline-block; text-decoration:none; height:20px; line-height:20px;">
+                        <img src="/static/common/img/beian.png" style="float:left;"/>
+                        <p style="float:left; height:20px; line-height:20px; margin: 0px 0px 0px 5px; color:#939393;">
+                            浙公网安备 33010602011276号
+                        </p>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
+</body>
+</html>

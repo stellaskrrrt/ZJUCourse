@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>高校教学平台</title>
+    <style>
+        .demoDiv {
+            display: inline-block;
+            text-align: center;
+            vertical-align: center;
+            margin-top: 2px;
+        }
+    </style>
+    <link href="/static/common/img/icon.jpg" rel="icon">
+    <link href="/static/common/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/static/common/css/icons.css" rel="stylesheet">
+    <link href="/static/common/editor/css/editormd.css" rel="stylesheet">
+    <link href="/static/common/editor/css/editormd.preview.css" rel="stylesheet">
+
+    <script src="/static/common/js/bootstrap.min.js"></script>
+    <script src="/static/common/js/jquery.min.js"></script>
+    <script src="/static/common/js/popper.min.js"></script>
+    <script src="/static/common/editor/editormd.js"></script>
+    <script src="/static/common/editor/lib/marked.min.js"></script>
+    <script src="/static/common/editor/lib/prettify.min.js"></script>
+    <script src="/static/common/editor/lib/raphael.min.js"></script>
+    <script src="/static/common/editor/lib/underscore.min.js"></script>
+    <script src="/static/common/editor/lib/sequence-diagram.min.js"></script>
+    <script src="/static/common/editor/lib/flowchart.min.js"></script>
+    <script src="/static/common/editor/lib/jquery.flowchart.min.js"></script>
+    <script src="https://cdn.staticfile.org/twitter-bootstrap/4.3.1/js/bootstrap.min.js"></script>
+</head>
+<body id="body">
+    <nav class="navbar navbar-expand-lg bg-dark navbar-dark fixed-top shadow">
+        <a class="navbar-brand" href="/">
+            <img src="/static/common/img/logo.png" alt="logo">
+        </a>
+        <button class="navbar-toggler" type="button" id="toggle-button">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="collapsibleNavbar">
+            <ul class="navbar-nav col-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="/course/index/">课程列表</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/user/myResource/">我的资源</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/help/">使用帮助</a>
+                </li>
+            </ul>
+            <div class="col-2"></div>
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <input type="text" class="form-control" placeholder="请输入您想查找的课程">
+                </li>
+            </ul>
+            <div class="col-2"></div>
+            <ul class="navbar-nav col-auto">
+                <li class="nav-item dropdown" id="notification">
+                    <a class="nav-link" href="/user/myNotification/"><span
+                            class="icon-bar-notification">通知<span
+                            class="bdge badge-primary"
+                            style="margin-left: 2px;">{{ notification_number }}</span></span></a>
+
+                    <div class="dropdown-menu" id="notification-menu">
+                        <a class="dropdown-item" href="#">通知 1</a>
+                        <a class="dropdown-item" href="#">通知 2</a>
+                        <a class="dropdown-item" href="#">通知 3</a>
+                    </div>
+                </li>
+                <li class="nav-item dropdown" id="profile" style="cursor: pointer; margin-left: 10px;">
+                    <img src="/static/common/img/default-profile.jpg" alt="logo" style="border-radius: 100%;"
+                         width="50" height="50">
+                    <div class="dropdown-menu" id="profile-menu">
+                        <a class="dropdown-item" href="/user/myCourse">
+                            <span class="icon-bar-course">我的课程</span>
+                        </a>
+                        <a class="dropdown-item" href="/user/myResource">
+                            <span class="icon-bar-resource">我的资源</span>
+                        </a>
+                        <a class="dropdown-item" href="/user/myForum">
+                            <span class="icon-bar-forum">我的论坛</span>
+                        </a>
+                        <a class="dropdown-item" href="/user/setting">
+                            <span class="icon-bar-setting">个人设置</span>
+                        </a>
+                    </div>
+                </li>
+                <span class="navbar-text" style="margin-left: 10px;">欢迎您！{{ name }}</span>
+            </ul>
+
+        </div>
+
+    </nav>
+    <script>
+        let state = false;
+        $('#toggle-button').click(function () {
+            if (state) {
+                $('#collapsibleNavbar').slideUp();
+                state = false;
+            } else {
+                $('#collapsibleNavbar').slideDown();
+                state = true;
+            }
+        })
+
+        document.getElementById('notification').onmouseenter = function () {
+            $('#notification-menu').slideDown();
+        }
+
+        document.getElementById('notification').onmouseleave = function () {
+            $('#notification-menu').slideUp();
+        }
+
+        document.getElementById('profile').onmouseenter = function () {
+            $('#profile-menu').slideDown();
+        }
+
+        document.getElementById('profile').onmouseleave = function () {
+            $('#profile-menu').slideUp();
+        }
+    </script>
+    <div class="container-fluid shadow bg-light border" style="margin-top: 100px;">
+        <div class="container" style="padding: 20px 20px;">
+            <h3><a href="../../../home">{{ course_name }}</a></h3>
+            <div class="row">
+                <p>{{ year }}&nbsp;&nbsp;</p>
+                <p>{{ semester }}&nbsp;&nbsp;</p>
+                <p>{{ department }}&nbsp;&nbsp;</p>
+                <p>{{ building }}&nbsp;&nbsp;</p>
+                <p>{{ room }}&nbsp;&nbsp;</p>
+            </div>
+            <div class="row">
+                <p>授课教师：</p>
+                {% for teacher in teacher_group %}
+                    <p><a href="#">{{ teacher.name }}</a>&nbsp;&nbsp;{{ teacher.email }}&nbsp;&nbsp;&nbsp;</p>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+    <div class="container shadow" style="margin-top: 20px; margin-bottom: 80px; padding: 20px 20px">
+        <div class="row">
+            <a href="../detail/"><i class="fa fa-backward"></i>&nbsp;&nbsp;返回作业详情</a>
+        </div>
+        <div class="container text-center">
+            <h2>{{ assignment_name }}</h2>
+        </div>
+        <div class="container-fluid" style="margin-top: 20px;">
+            <ul class="list-group">
+                <li class="list-group-item list-group-item-info">
+                    <div class="row">
+                        <div class="col-3">学生姓名</div>
+                        <div class="col-3">作业状态</div>
+                        <div class="col-3">目前得分</div>
+                        <div class="col-3">批改</div>
+                    </div>
+                </li>
+                {% for student in student_group %}
+                    <li class="list-group-item">
+                        <div class="row">
+                            <div class="col-3">{{ student.name }}</div>
+                            <div class="col-3">{{ student.state }}</div>
+                            <div class="col-3">{{ student.score }}</div>
+                            <div class="col-3">
+                                <button class="btn btn-outline-secondary" onclick="check_detail({{ student.id }})">批改
+                                </button>
+                            </div>
+                        </div>
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+
+    <div class="modal fade" id="myModal">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+
+                <!-- 模态框头部 -->
+                <div class="modal-header">
+                    <h4 class="modal-title">{{ assignment_name }}</h4>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+
+                <!-- 模态框主体 -->
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-8">
+                            <div class="container-fluid" style="margin-bottom: 20px;">
+                                <p class="border-bottom">作业内容</p>
+                                <div id="assignment_content">
+                                    <textarea id="homework_content"></textarea>
+                                </div>
+                            </div>
+                            <div class="container-fluid">
+                                <p class="border-bottom">附件</p>
+                                <ul class="list-group">
+                                    <li class="list-group-item list-group-item-light">
+                                        <div class="row">
+                                            <div class="col-6">名称</div>
+                                            <div class="col-4">大小</div>
+                                            <div class="col-2"></div>
+                                        </div>
+                                    </li>
+                                    <li class="list-group-item" id="file_list">
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="col-4 border-left">
+                            <div class="container-fluid">
+                                <div class="input-group mb-4">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text">分数</span>
+                                    </div>
+                                    <input type="text" class="form-control" placeholder="请输入1-100的数字" id="score">
+                                </div>
+                                <p class="border-bottom">评语</p>
+                                <textarea class="form-control" id="comment"></textarea>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 模态框底部 -->
+                <div class="modal-footer">
+                    <p style="color: red;" id="hint"></p>
+                    <button type="button" class="btn btn-outline-danger"
+                            onclick="new_score($('#score').val().toString(), $('#comment').val().toString(), current_student_id);">
+                        确认打分
+                    </button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">关闭</button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <script>
+        let current_student_id = '';
+
+        function check_detail(student_id) {
+            current_student_id = student_id;
+            $.ajax({
+                url: '../check_detail/',
+                type: 'GET',
+                data: {
+                    'student_id': student_id.toString(),
+                },
+                success: function (result) {
+                    $('#myModal').modal();
+                    let length = Object.keys(result).length - 2;
+                    document.getElementById('homework_content').innerHTML = result['content'];
+                    editormd.markdownToHTML("assignment_content", {
+                        htmlDecode: "style,script,iframe",
+                        emoji: true,
+                        taskList: true,
+                        tex: true,  // 默认不解析
+                        flowChart: true,  // 默认不解析
+                        sequenceDiagram: true  // 默认不解析
+                    });
+
+                    let html = '';
+
+                    for (let i = 0; i < length; i++) {
+                        let file = result['file_group' + i.toString()];
+                        let link = '/static/Files/class/' + result['class_id'].toString() + '/' + file['real_name'].toString();
+                        html += '<div class=\"row\">';
+                        html += '<div class="col-1"><i class="fa fa-file-' + file['type'].toString() + '-o"></i></div>';
+                        html += '<div class="col-6">' + file['name'].toString() + '</div>';
+                        html += '<div class="col-3">' + file['size'].toString() + '</div>';
+                        html += '<div class="col-1"><i class="fa fa-eye" onclick="display(\'' + file['name'] + '\', \'' + link + '\');" style=\'cursor: pointer;\'></i></div>' +
+                            '<div class="col-1"><a href="' + link + '"><i class="fa fa-download"></i></a></div>';
+                        html += '</div>';
+                    }
+
+                    document.getElementById('file_list').innerHTML = html;
+
+                }
+            })
+
+        }
+
+        function new_score(score, comment, student_id) {
+            $.ajax({
+                type: 'POST',
+                url: '../new_score/',
+                data: {
+                    csrfmiddlewaretoken: '{{ csrf_token }}',
+                    'student_id': student_id,
+                    'score': score.toString(),
+                    'comment': comment.toString(),
+                },
+                success: function (result) {
+                    if (result.toString() === 'ok') {
+                        document.getElementById('hint').innerText = "打分成功！";
+                        setTimeout(function () {
+                            $('#myModal').modal('hide');
+                        }, 2000);
+                    }
+                }
+            })
+        }
+
+        function display(file_name, link) {
+            document.getElementById('preview').innerHTML = "<div class=\"modal-dialog\" style=\"max-width: 1300px;\">\n" +
+                "            <div class=\"modal-content\">\n" +
+                "\n" +
+                "                <!-- 模态框头部 -->\n" +
+                "                <div class=\"modal-header\">\n" +
+                "                    <h4 class=\"modal-title\" id=\"file_name\">" + file_name.toString() + "</h4>\n" +
+                "                    <button type=\"button\" class=\"close\" data-dismiss=\"modal\">&times;</button>\n" +
+                "                </div>\n" +
+                "\n" +
+                "                <!-- 模态框主体 -->\n" +
+                "                <div class=\"modal-body\">\n" +
+                "                    <embed id=\"file_preview\" width=\"100%\" height=\"900\" src='" + link.toString() + "'>\n" +
+                "                </div>\n" +
+                "            </div>\n" +
+                "        </div>";
+            $('#preview').modal();
+        }
+    </script>
+    <div class="modal fade" id="preview"></div>
+
+    <nav class="navbar navbar-expand-sm bg-dark navbar-dark shadow fixed-bottom" style="height: 50px;">
+        <div class="container">
+            <div class="custom-control-inline" style="margin: 0 auto;">
+                <div class="navbar-text">
+                    <div class="nav-link">Copyright &copy; 2020.Zhejiang University All rights reserved.&nbsp;&nbsp;&nbsp;
+                        <a target="_blank" href="http://www.zju.edu.cn">浙江大学官网</a>
+                    </div>
+                </div>
+                <div style="width:250px; margin:0 auto; padding:20px 0;">
+                    <a target="_blank"
+                       href="http://beian.miit.gov.cn/"
+                       style="display:inline-block; text-decoration:none; height:20px; line-height:20px;">
+                        <p style="float:left; height:20px; line-height:20px; margin: 0px 0px 0px 5px; color:white;">
+                            浙ICP备2020034971号
+                        </p>
+                    </a>
+                </div>
+                <div style="width:250px; margin:0 auto; padding:20px 0;">
+                    <a target="_blank"
+                       href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=33010602011276"
+                       style="display:inline-block; text-decoration:none; height:20px; line-height:20px;">
+                        <img src="/static/common/img/beian.png" style="float:left;"/>
+                        <p style="float:left; height:20px; line-height:20px; margin: 0px 0px 0px 5px; color:#939393;">
+                            浙公网安备 33010602011276号
+                        </p>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
+</body>
+</html>

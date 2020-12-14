@@ -1,0 +1,44 @@
+.icon-bar-notification {
+    background-image: url("../../common/img/icon/notification.svg");
+    background-repeat: no-repeat;
+    background-position: 0px 2px;
+    background-size: 20px 20px;
+    display: block;
+    padding-left: 30px;
+}
+
+.icon-bar-resource {
+    background-image: url("../../common/img/icon/resource.svg");
+    background-repeat: no-repeat;
+    background-position: 0px 2px;
+    background-size: 18px 18px;
+    display: block;
+    padding-left: 30px;
+}
+
+.icon-bar-setting {
+    background-image: url("../../common/img/icon/setting.svg");
+    background-repeat: no-repeat;
+    background-position: 0px 2px;
+    background-size: 18px 18px;
+    display: block;
+    padding-left: 30px;
+}
+
+.icon-bar-forum {
+    background-image: url("../../common/img/icon/forum.svg");
+    background-repeat: no-repeat;
+    background-position: 0px 2px;
+    background-size: 18px 18px;
+    display: block;
+    padding-left: 30px;
+}
+
+.icon-bar-course {
+    background-image: url("../../common/img/icon/course.svg");
+    background-repeat: no-repeat;
+    background-position: 0px 2px;
+    background-size: 18px 18px;
+    display: block;
+    padding-left: 30px;
+}

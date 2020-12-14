@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>高校教学平台</title>
+
+    <link href="../../../static/common/img/icon.jpg" rel="icon">
+    <link href="../../../static/common/css/bootstrap.min.css" rel="stylesheet">
+    <link href="../../../static/common/css/icons.css" rel="stylesheet">
+
+    <script src="../../../static/common/js/bootstrap.min.js"></script>
+    <script src="../../../static/common/js/jquery.min.js"></script>
+    <script src="../../../static/common/js/popper.min.js"></script>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg bg-dark navbar-dark fixed-top shadow">
+        <a class="navbar-brand" href="../../../">
+            <img src="../../../static/common/img/logo.png" alt="logo">
+        </a>
+        <button class="navbar-toggler" type="button" id="toggle-button">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse row" id="collapsibleNavbar">
+            <ul class="navbar-nav col-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="../../../course/index/">课程列表</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="../../../user/myResource/">我的资源</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="../../../help/">使用帮助</a>
+                </li>
+            </ul>
+            <ul class="col-2"></ul>
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <input type="text" class="form-control" placeholder="请输入您想查找的课程">
+                </li>
+            </ul>
+            <ul class="col-2"></ul>
+            <ul class="navbar-nav col-auto">
+                <li class="nav-item dropdown" id="notification">
+                    <a class="nav-link" href="../../../user/myNotification/"><span class="icon-bar-notification">通知<span
+                            class="bdge badge-primary" style="margin-left: 2px;">{{ notification_number }}</span></span></a>
+
+                    <div class="dropdown-menu" id="notification-menu">
+                        <a class="dropdown-item" href="#">通知 1</a>
+                        <a class="dropdown-item" href="#">通知 2</a>
+                        <a class="dropdown-item" href="#">通知 3</a>
+                    </div>
+                </li>
+                <li class="nav-item dropdown" id="profile" style="cursor: pointer; margin-left: 10px;">
+                    <img src="../../../static/common/img/default-profile.jpg" alt="logo" style="border-radius: 100%;"
+                         width="50" height="50">
+                    <div class="dropdown-menu" id="profile-menu">
+                        <a class="dropdown-item" href="../../../user/myCourse">
+                            <span class="icon-bar-course">我的课程</span>
+                        </a>
+                        <a class="dropdown-item" href="../../../user/myResource">
+                            <span class="icon-bar-resource">我的资源</span>
+                        </a>
+                        <a class="dropdown-item" href="../../../user/myForum">
+                            <span class="icon-bar-forum">我的论坛</span>
+                        </a>
+                        <a class="dropdown-item" href="../../../user/setting">
+                            <span class="icon-bar-setting">个人设置</span>
+                        </a>
+                    </div>
+                </li>
+                <span class="navbar-text" style="margin-left: 10px;">欢迎您！{{ name }}</span>
+            </ul>
+        </div>
+
+    </nav>
+    <script>
+        let state = false;
+        $('#toggle-button').click(function () {
+            if (state) {
+                $('#collapsibleNavbar').slideUp();
+                state = false;
+            } else {
+                $('#collapsibleNavbar').slideDown();
+                state = true;
+            }
+        })
+
+        document.getElementById('notification').onmouseenter = function () {
+            $('#notification-menu').slideDown();
+        }
+
+        document.getElementById('notification').onmouseleave = function () {
+            $('#notification-menu').slideUp();
+        }
+
+        document.getElementById('profile').onmouseenter = function () {
+            $('#profile-menu').slideDown();
+        }
+
+        document.getElementById('profile').onmouseleave = function () {
+            $('#profile-menu').slideUp();
+        }
+    </script>
+    <div class="container-fluid shadow bg-light border" style="margin-top: 100px; margin-bottom: 100px;">
+        <div class="container shadow">
+            <h3>{{ course_name }}</h3>
+            <div class="custom-control-inline">
+                <p>{{ semester }}&nbsp;&nbsp;</p>
+                <p>{{ year }}&nbsp;&nbsp;</p>
+                <p>{{ department }}</p>
+            </div>
+            <br>
+            <div class="custom-control-inline">
+                <p>授课教师：</p>
+                {% for teacher in teacher_group %}
+                    <p>{{ teacher.name }}&nbsp;&nbsp;{{ teacher.email }}&nbsp;&nbsp;&nbsp;</p>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="container shadow">
+            <ul class="nav nav-tabs" style="margin-top: 20px;">
+                <li class="nav-item">
+                    <a class="nav-link active" data-toggle="tab" href="#basic">章节</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" data-toggle="tab" href="../notification">通知</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" data-toggle="tab" href="../material">资料</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" data-toggle="tab" href="../homework">作业</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" data-toggle="tab" href="../exam">测试</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" data-toggle="tab" href="../experiment">实验</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" data-toggle="tab" href="../forum">论坛</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" data-toggle="tab" href="../group">分组</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" data-toggle="tab" href="../viewScore">成绩</a>
+                </li>
+            </ul>
+
+            <div class="tab-content">
+                <div class="tab-pane fade show active" id="basic"></div>
+            </div>
+        </div>
+    </div>
+
+    <nav class="navbar navbar-expand-sm bg-dark navbar-dark shadow fixed-bottom" style="height: 50px;">
+        <div class="container">
+            <div class="custom-control-inline" style="margin: 0 auto;">
+                <div class="navbar-text">
+                    <div class="nav-link">Copyright &copy; 2020.Zhejiang University All rights reserved.&nbsp;&nbsp;&nbsp;
+                        <a target="_blank" href="http://www.zju.edu.cn">浙江大学官网</a>
+                    </div>
+                </div>
+                <div style="width:250px; margin:0 auto; padding:20px 0;">
+                    <a target="_blank"
+                       href="http://beian.miit.gov.cn/"
+                       style="display:inline-block; text-decoration:none; height:20px; line-height:20px;">
+                        <p style="float:left; height:20px; line-height:20px; margin: 0px 0px 0px 5px; color:white;">
+                            浙ICP备2020034971号
+                        </p>
+                    </a>
+                </div>
+                <div style="width:250px; margin:0 auto; padding:20px 0;">
+                    <a target="_blank"
+                       href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=33010602011276"
+                       style="display:inline-block; text-decoration:none; height:20px; line-height:20px;">
+                        <img src="../../../static/common/img/beian.png" style="float:left;"/>
+                        <p style="float:left; height:20px; line-height:20px; margin: 0px 0px 0px 5px; color:#939393;">
+                            浙公网安备 33010602011276号
+                        </p>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
+</body>
+</html>
