@@ -128,3 +128,7 @@ def checkPassword(request):
                 return HttpResponse('no')
             else:
                 return render(request, 'index/chPassword.html')
+
+def logout(request):
+    request.COOKIES.clear()
+    return HttpResponse("OK")
