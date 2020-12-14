@@ -18,7 +18,7 @@ def login(request):
     if request.method == 'GET':
         return render(request, 'index/login.html')
     elif request.method == 'POST':
-        rep = redirect("../class/23505/home")
+        rep = redirect("../class/23505/home/")
         id = request.POST.get('id')
         pwd = request.POST.get('pass')
         query = "select * from User where User_ID = %s and Password = %s"
@@ -57,7 +57,7 @@ def register(request):
 
 def fgPassword(request):
     if request.COOKIES['is_login']:
-        rep = redirect("../class/23505/home")
+        rep = redirect("../class/23505/home/")
         if request.method == 'GET':
             return render(request, 'index/fgPassword.html')
         if request.method == 'POST':
@@ -75,19 +75,16 @@ def fgPassword(request):
 
 def chPassword(request):
     if request.COOKIES['is_login']:
-        rep = redirect("../class/23505/home")
+        rep = redirect("../class/23505/home/")
         if request.method == 'GET':
             return render(request, 'index/chPassword.html')
         if request.method == 'POST':
             userid = request.COOKIES['user_id']
             prepasswd = request.POST.get('prepasswd')
             newpasswd = request.POST.get('newpasswd')
-            qurey = "update User  set Password = %s where User_ID = %s"
-            result = sql.execute(qurey, newpasswd, userid)
-            if len(result) != 1:
-                return HttpResponse('no')
-            else:
-                return rep
+            qurey = "update User set Password = %s where User_ID = %s"
+            sql.execute(qurey, newpasswd, userid)
+            return rep
 
 
 def checkPassword(request):
@@ -97,6 +94,7 @@ def checkPassword(request):
         if request.method == 'POST':
             name = request.POST.get('name')
             prepasswd = request.POST.get('prepasswd')
+            print(name, prepasswd)
             qurey = "select * from User where Name= %s and Password = %s"
             res = sql.select(qurey, name, prepasswd)
             if len(res) != 1:
