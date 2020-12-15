@@ -35,7 +35,7 @@
         <label for="repassword">确认密码:</label>
         <input type="password" class="form-control" id="repassword">
     </div>
-    <input type="button" class="btn btn-primary" id="login" value="登录">
+    <input type="button" class="btn btn-primary" id="login" value="注册">
     <h2 id="hint"></h2>
 </div>
 
@@ -97,14 +97,14 @@
                 if (result.toString() === 'no') {
                     document.getElementById('hint').innerText = 'fail';
                     alert("用户已存在");
-                    return;
+
                 } else {
                     window.location.replace('/login/');
                 }
             },
             error: function (result) {
                 alert("错误");
-                return;
+
             }
         });
     })
