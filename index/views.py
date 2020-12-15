@@ -9,29 +9,6 @@ from ZJUCourse.settings import EMAIL_HOST_USER
 
 sql = sqlframe.SqlHandler('conf.txt', 'ZJUCourse')
 
-
-def md5(str):
-    m = hashlib.md5()
-    m.update(str.encode("utf8"))
-    return m.hexdigest()
-
-
-def gencode2md5(str):
-    code = md5(str)
-    return code
-
-
-def gencode(code_len=4):
-    """生成指定长度的验证码
-    : param code_len :验证码的长度（默认4个字符)
-    : return :由大小写字母和数字构成的随机验证码
-    """
-    all_chars = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'
-    code = random.sample(all_chars, code_len)
-    code = ''.join(code)
-    return code
-
-
 # Create your views here.
 def index(request):
     return render(request, 'index/index.html')
@@ -59,7 +36,6 @@ def login(request):
             rep.set_cookie(key='is_login', value=True)
             rep.set_cookie(key='user_id', value=str(id))
             rep.set_cookie(key='user_type', value=str(result[0][6]))
-
             return rep
 
 
@@ -101,7 +77,7 @@ def findPassword(request):
 
 
 def chPassword(request, username):
-    if request.COOKIES['is_login']:
+    if request.COOKIES.get('is_login'):
         if request.method == 'GET':
             return render(request, 'index/chPassword.html')
         if request.method == 'POST':
@@ -113,7 +89,7 @@ def chPassword(request, username):
 
 
 def checkPassword(request):
-    if request.COOKIES['is_login']:
+    if request.COOKIES.get('is_login'):
         if request.method == 'GET':
             return render(request, 'index/checkPassword.html')
         if request.method == 'POST':
@@ -130,4 +106,4 @@ def checkPassword(request):
 
 def logout(request):
     request.COOKIES.clear()
-    return HttpResponse("OK")
+    return redirect('/')
