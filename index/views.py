@@ -78,8 +78,8 @@ def register(request):
         if len(result) == 1:
             return HttpResponse('no')
         else:
-            sql.execute("insert into User values(%s, %s, %s, %s, %s, %s, %s)", username,
-                        password, username, '', email, phone, 0)
+            sql.execute("insert into User values(%s, %s, %s, %s, %s, %d, %s)", username,
+                        password, username, '', email, int(phone), 0)
             return HttpResponse('yes')
 
 
