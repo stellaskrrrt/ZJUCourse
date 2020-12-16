@@ -36,6 +36,7 @@ def login(request):
             rep.set_cookie(key='is_login', value=True)
             rep.set_cookie(key='user_id', value=str(id))
             rep.set_cookie(key='user_type', value=str(result[0][6]))
+
             return rep
 
 
@@ -105,5 +106,6 @@ def checkPassword(request):
 
 
 def logout(request):
-    request.COOKIES.clear()
-    return redirect('/')
+    rep = redirect('/')
+    rep.flush()
+    return
