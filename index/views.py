@@ -108,4 +108,4 @@ def checkPassword(request):
 def logout(request):
     rep = redirect('/')
     rep.flush()
-    return
+    return rep
